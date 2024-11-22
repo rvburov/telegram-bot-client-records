@@ -1,6 +1,7 @@
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 import os
+from fastapi import FastAPI, Request
+from telegram import Update
+from telegram.ext import Application, CommandHandler, ContextTypes
 from dotenv import load_dotenv
 
 # Загружаем переменные окружения
