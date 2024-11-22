@@ -25,7 +25,7 @@ async def handle_start_command(update: Update, context: ContextTypes.DEFAULT_TYP
         # Отправляем изображение
         await update.message.reply_photo(
             photo="https://avatars.mds.yandex.net/get-altay/5476806/2a0000017e6a21f86297a5246460c10df452/XXXL",
-            caption="⬇️    Выберите действие     ⬇️",
+            caption="⬇️ Выберите действие ⬇️",
             reply_markup=reply_markup
         )
 
@@ -62,7 +62,7 @@ async def handle_back_to_menu(update: Update, context: ContextTypes.DEFAULT_TYPE
     # Используем callback_query.message для отправки фото
     await update.callback_query.message.reply_photo(
         photo="https://avatars.mds.yandex.net/get-altay/5476806/2a0000017e6a21f86297a5246460c10df452/XXXL",
-        caption="⬇️    Выберите действие     ⬇️",
+        caption="⬇️ Выберите действие ⬇️",
         reply_markup=reply_markup
     )
 
