@@ -47,18 +47,52 @@ client-records-telegram-bot/
 git clone https://github.com/your-username/client-records-telegram-bot.git
 cd client-records-telegram-bot
 ```
+### 2. Установка Homebrew для Linux/MacOS
 
-### 2. Установите виртуальное окружение и зависимости
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+brew --version
+```
+
+Apple Silicon (M1/M2):
+```bash
+echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zshrc
+eval "$(/usr/local/bin/brew shellenv)"
+```
+
+Intel:
+```bash
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zshrc
+eval "$(/opt/homebrew/bin/brew shellenv)"
+```
+
+Установка python
+```bash
+brew install python
+python --version
+```
+
+Установка Node.js
+```bash
+brew install node
+node --version
+npm --version
+```
+
+### 3. Установите виртуальное окружение и зависимости
 
 ```bash
 python3 -m venv venv             # Создаем виртуальное окружение в папке `venv`
 source venv/bin/activate         # Активируем виртуальное окружение (Linux/MacOS).
 venv\Scripts\activate            # Активируем виртуальное окружение на Windows.
 ```
+
 ```bash
 pip --version                # Проверяем текущую установленную версию `pip` (пакетного менеджера Python)
 pip install --upgrade pip    # Обновляем `pip` до последней версии
 ```
+
 ```bash
 pip install -r requirements.txt  # Устанавливаем все зависимости, указанные в файле `requirements.txt`
 ```
@@ -66,6 +100,7 @@ pip install -r requirements.txt  # Устанавливаем все завис�
 📦 Установка библиотек
 
 ```bash
+
 # Устанавливаем библиотеку для работы с Telegram Bot API (версия 20.5)
 pip install python-telegram-bot==20.5
 
@@ -81,6 +116,41 @@ pip install uvicorn
 # Сохраняем текущие установленные зависимости в файл `requirements.txt`
 # Это позволяет другим разработчикам установить те же версии библиотек
 pip freeze > requirements.txt
+
+
+pip install httpx
+
+pip install requests
+```
+
+▶️ Настройте вебхук для Telegram
+
+Установите сервер Vercel CLI
+
+```bash
+npm install -g vercel
+vercel --version
+```
+Авторизуйтесь в Vercel
+
+```bash
+vercel login
+```
+
+Создайте конфигурацию vercel.json
+
+```json
+{
+  "routes": [
+    { "src": "/.*", "dest": "api/index.py" }
+  ]
+}
+```
+
+Разверните проект сделайте деплоя в Vercel
+
+```bash
+vercel
 ```
 
 ▶️ Запуск приложения с помощью uvicorn
