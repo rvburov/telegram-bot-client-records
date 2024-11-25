@@ -1,8 +1,14 @@
 from fastapi import FastAPI, Request
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+from fastapi.responses import JSONResponse
 from telegram.ext import Application, CommandHandler
 import os
 from dotenv import load_dotenv
+import uvloop
+import asyncio
+
+# Установить uvloop для asyncio
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 # Загрузка переменных окружения
 load_dotenv()
@@ -23,20 +29,27 @@ async def handle_start_command(update: Update, context):
 # Регистрация обработчиков Telegram
 telegram_app.add_handler(CommandHandler("start", handle_start_command))
 
-# Асинхронная инициализация Telegram приложения
-@app.on_event("startup")
-async def startup_event():
-    await telegram_app.initialize()
-    print("Telegram application initialized")
+# Обработчик ошибок Telegram
+async def error_handler(update, context):
+    print(f"Update {update} caused error {context.error}")
 
-@app.on_event("shutdown")
-async def shutdown_event():
-    await telegram_app.shutdown()
+telegram_app.add_error_handler(error_handler)
+
+# Инициализация Telegram приложения
+asyncio.run(telegram_app.initialize())
 
 # Обработчик вебхуков
 @app.post("/webhook")
 async def telegram_webhook(request: Request):
-    data = await request.json()
-    update = Update.de_json(data, telegram_app.bot)
-    await telegram_app.process_update(update)
-    return {"status": "ok"}
+    try:
+        data = await request.json()
+        update = Update.de_json(data, telegram_app.bot)
+        await telegram_app.process_update(update)
+        return {"status": "ok"}
+    except Exception as e:
+        print(f"Error in webhook: {e}")
+        return JSONResponse(content={"status": "error", "detail": str(e)}, status_code=500)
+
+@app.get("/")
+async def root():
+    return {"message": "Hello from Vercel"}
