@@ -8,9 +8,9 @@
 
 - Отправка сообщений с фото, кнопками и ссылками.
 - Интерактивное меню с переходами между разделами.
-- Возможность записи через веб-приложение YClients.
-- Просмотр продукции для бритья с возможностью вернуться в главное меню.
-- Быстрый доступ к отзывам, Instagram, VK и маршруту до барбершопа.
+- Возможность записи клиентов через внешнее веб-приложение.
+- Просмотр информации о продуктах и услугах с возможностью возвращения в главное меню.
+- Быстрый доступ к отзывам, контактам и маршруту до компании.
 
 ---
 
@@ -64,30 +64,53 @@ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zshrc
 eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
-#### Intel:
+#### Apple Intel:
 
 ```bash
 echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zshrc
 eval "$(/usr/local/bin/brew shellenv)"
 ```
 
+Для Windows:
+
+На Windows Homebrew не поддерживается. Вместо этого используйте встроенные инструменты или Chocolatey для установки приложений. Убедитесь, что у вас установлен Python. Если нет, установите его с официального сайта Python.
+
 ### 3. Установите Python
+
+**Linux/MacOS:**
 
 ```bash
 brew install python
 python3 --version
+pip --version
+```
+
+**Windows:**
+
+Скачайте установщик Python с [официального сайта](https://www.python.org/downloads/).
+При установке отметьте галочку "Add Python to PATH".
+После установки проверьте версию Python в командной строке:
+```bash
+python --version
+pip --version
 ```
 
 ### 4. Настройте виртуальное окружение и зависимости
 
+**Linux/MacOS:**
 ```bash
 python3 -m venv venv             # Создаем виртуальное окружение в папке `venv`
 source venv/bin/activate         # Активируем виртуальное окружение (Linux/MacOS)
-venv\Scripts\activate            # Активируем виртуальное окружение (Windows)
+```
+
+**Windows:**
+```bash
+python -m venv venv
+venv\Scripts\activate
 ```
 
 ```bash
-pip install --upgrade pip        # Обновляем `pip` до последней версии
+pip install --upgrade pip        # Обновляем `pip` до последней версии (универсально для всех систем)
 pip install -r requirements.txt  # Устанавливаем зависимости из `requirements.txt`
 ```
 
@@ -105,8 +128,26 @@ pip freeze > requirements.txt    # Сохраняем зависимости
 
 Для подключения Webhooks понадобится публичный HTTPS-адрес. Используем **ngrok** для создания безопасных туннелей:
 
+**Linux/MacOS:**
 ```bash
 brew install --cask ngrok        # Устанавливаем ngrok
+ngrok config add-authtoken <YOUR_AUTH_TOKEN>  # Добавляем токен
+```
+**Windows:**
+1. Скачайте ngrok с [официального сайта](https://ngrok.com) и установите.
+2. Добавьте ngrok в системный PATH:
+   - Разархивируйте файл в удобную директорию, например C:\ngrok.
+   - Добавьте путь в переменную PATH:
+     1. Нажмите Win + R, введите sysdm.cpl.
+     2. Перейдите во вкладку Advanced > Environment Variables.
+     3. В разделе System Variables выберите Path, нажмите Edit, добавьте путь к ngrok.
+
+Проверьте установку:
+```bash
+ngrok version
+```
+Конфигурация ngrok:
+```bash
 ngrok config add-authtoken <YOUR_AUTH_TOKEN>  # Добавляем токен
 ```
 
@@ -140,8 +181,19 @@ curl "https://api.telegram.org/bot<BOT_TOKEN>/getWebhookInfo"
 
 ### 1. Установите Node.js и Vercel CLI
 
+**Linux/MacOS:**
 ```bash
 brew install node
+node --version
+npm --version
+npm install -g vercel
+```
+
+**Windows:**
+Скачайте последнюю версию Node.js с [официального сайта](https://nodejs.org/uk) (рекомендуется LTS версия).
+```bash
+node --version
+npm --version
 npm install -g vercel
 ```
 
@@ -172,6 +224,7 @@ vercel --prod  # Повторный деплой
 vercel env add BOT_TOKEN
 vercel env add APP_URL
 ```
+
 
 Настройте Webhook для Vercel:
 
