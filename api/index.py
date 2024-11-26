@@ -12,7 +12,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 # Создание FastAPI приложения
 app = FastAPI()
 
-# Создание и инициализация Telegram приложения
+# Создание Telegram приложения
 telegram_app = Application.builder().token(BOT_TOKEN).build()
 
 # Обработчик команды /start
@@ -27,11 +27,20 @@ telegram_app.add_handler(CommandHandler("start", handle_start_command))
 # Обработчик вебхуков
 @app.post("/webhook")
 async def telegram_webhook(request: Request):
-    # Инициализация Telegram-приложения при каждом запросе
-    if not telegram_app._is_initialized:
-        await telegram_app.initialize()
-
     data = await request.json()
     update = Update.de_json(data, telegram_app.bot)
     await telegram_app.process_update(update)
     return {"status": "ok"}
+
+# Инициализация Telegram-приложения при запуске FastAPI
+@app.on_event("startup")
+async def startup_event():
+    # Инициализация Telegram Application
+    await telegram_app.initialize()
+    # Запуск работы бота
+    await telegram_app.start()
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    # Остановка Telegram Application
+    await telegram_app.stop()
