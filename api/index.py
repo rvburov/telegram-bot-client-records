@@ -15,7 +15,6 @@ app = FastAPI()
 # Создание и инициализация Telegram приложения
 telegram_app = Application.builder().token(BOT_TOKEN).build()
 bot = Bot(token=BOT_TOKEN)  # Инициализация бота для установки команд
-asyncio.run(telegram_app.initialize())
 
 # Устанавливаем команды для меню
 async def set_bot_commands():
@@ -24,6 +23,8 @@ async def set_bot_commands():
         BotCommand("contact", "Контакты")
     ]
     await bot.set_my_commands(commands)
+
+asyncio.run(telegram_app.initialize())
 
 # Отправляем сообщение с фото, текстом и кнопками
 async def handle_start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
