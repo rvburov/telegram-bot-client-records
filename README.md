@@ -35,11 +35,13 @@ client-records-telegram-bot/
 ├── .gitignore               # Исключение виртуального окружения из репозитория
 ├── requirements.txt         # Зависимости проекта
 ├── vercel.json              # Конфигурация Vercel для маршрутизации
-├── README.md                # Документация для проекта (опционально)
+├── README.md                # Документация для проекта
 └── .env                     # Переменные окружения (не для публичного репозитория)
 ```
 
-## 🚀 Установка и настройка
+---
+
+## 🚀 Установка и настройка телеграм-бота
 
 ### 1. Клонируйте репозиторий
 
@@ -47,118 +49,138 @@ client-records-telegram-bot/
 git clone https://github.com/your-username/client-records-telegram-bot.git
 cd client-records-telegram-bot
 ```
-### 2. Установка Homebrew для Linux/MacOS
+
+### 2. Установите Homebrew (Linux/MacOS)
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
 brew --version
 ```
 
-Apple Silicon (M1/M2):
-```bash
-echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zshrc
-eval "$(/usr/local/bin/brew shellenv)"
-```
+#### Apple Silicon (M1/M2):
 
-Intel:
 ```bash
 echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zshrc
 eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
-Установка python
+#### Intel:
+
+```bash
+echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zshrc
+eval "$(/usr/local/bin/brew shellenv)"
+```
+
+### 3. Установите Python
+
 ```bash
 brew install python
-python --version
+python3 --version
 ```
 
-Установка Node.js
-```bash
-brew install node
-node --version
-npm --version
-```
-
-### 3. Установите виртуальное окружение и зависимости
+### 4. Настройте виртуальное окружение и зависимости
 
 ```bash
 python3 -m venv venv             # Создаем виртуальное окружение в папке `venv`
-source venv/bin/activate         # Активируем виртуальное окружение (Linux/MacOS).
-venv\Scripts\activate            # Активируем виртуальное окружение на Windows.
+source venv/bin/activate         # Активируем виртуальное окружение (Linux/MacOS)
+venv\Scripts\activate            # Активируем виртуальное окружение (Windows)
 ```
 
 ```bash
-pip --version                # Проверяем текущую установленную версию `pip` (пакетного менеджера Python)
-pip install --upgrade pip    # Обновляем `pip` до последней версии
+pip install --upgrade pip        # Обновляем `pip` до последней версии
+pip install -r requirements.txt  # Устанавливаем зависимости из `requirements.txt`
 ```
 
-```bash
-pip install -r requirements.txt  # Устанавливаем все зависимости, указанные в файле `requirements.txt`
-```
-
-📦 Установка библиотек
+📦 **Установка библиотек:**
 
 ```bash
-
-# Устанавливаем библиотеку для работы с Telegram Bot API (версия 20.5)
 pip install python-telegram-bot==20.5
-
-# Устанавливаем FastAPI — фреймворк для создания веб-приложений и API
-pip install fastapi
-
-# Устанавливаем библиотеку для работы с переменными окружения из файла `.env`
-pip install python-dotenv
-
-# Устанавливаем Uvicorn — ASGI-сервер для запуска FastAPI-приложений
-pip install uvicorn
-
-# Сохраняем текущие установленные зависимости в файл `requirements.txt`
-# Это позволяет другим разработчикам установить те же версии библиотек
-pip freeze > requirements.txt
-
-
-pip install httpx
-
-pip install requests
+pip install fastapi python-dotenv uvicorn
+pip freeze > requirements.txt    # Сохраняем зависимости
 ```
 
-▶️ Настройте вебхук для Telegram
+---
 
-Установите сервер Vercel CLI
+## 🌐 Настройка и запуск Webhooks на локальном сервере
+
+Для подключения Webhooks понадобится публичный HTTPS-адрес. Используем **ngrok** для создания безопасных туннелей:
 
 ```bash
-npm install -g vercel
-vercel --version
+brew install --cask ngrok        # Устанавливаем ngrok
+ngrok config add-authtoken <YOUR_AUTH_TOKEN>  # Добавляем токен
 ```
-Авторизуйтесь в Vercel
+
+1. Запустите локальный сервер FastAPI:
+
+    ```bash
+    uvicorn api.index:app --reload
+    ```
+
+2. Запустите ngrok и получите HTTPS-адрес:
+
+    ```bash
+    ngrok http 8000
+    ```
+
+3. Настройте Webhook для Telegram:
+
+    ```bash
+    curl -X POST "https://api.telegram.org/bot<BOT_TOKEN>/setWebhook" -d "url=https://<NGROK_URL>/webhook"
+    ```
+
+Проверьте статус Webhook:
+
+```bash
+curl "https://api.telegram.org/bot<BOT_TOKEN>/getWebhookInfo"
+```
+
+---
+
+## 🚀 Настройка и деплой на Vercel
+
+### 1. Установите Node.js и Vercel CLI
+
+```bash
+brew install node
+npm install -g vercel
+```
+
+### 2. Авторизуйтесь в Vercel
 
 ```bash
 vercel login
 ```
 
-Создайте конфигурацию vercel.json
+### 3. Создайте файл `vercel.json`
 
 ```json
 {
-  "routes": [
-    { "src": "/.*", "dest": "api/index.py" }
-  ]
+  "rewrites": [{ "source": "/(.*)", "destination": "/api/index" }]
 }
 ```
 
-Разверните проект сделайте деплоя в Vercel
+### 4. Деплой проекта
 
 ```bash
-vercel
+vercel  # Первый деплой
+vercel --prod  # Повторный деплой
 ```
 
-▶️ Запуск приложения с помощью uvicorn
+Добавьте переменные окружения в Vercel:
 
 ```bash
-uvicorn index:app --reload
+vercel env add BOT_TOKEN
+vercel env add APP_URL
 ```
 
-После запуска приложение будет доступно по адресу:
-http://127.0.0.1:8000
+Настройте Webhook для Vercel:
 
+```bash
+curl -X POST "https://api.telegram.org/bot<BOT_TOKEN>/setWebhook" -d "url=https://<VERCEL_URL>/webhook"
+```
+
+Проверьте статус:
+
+```bash
+curl "https://api.telegram.org/bot<BOT_TOKEN>/getWebhookInfo"
+```
