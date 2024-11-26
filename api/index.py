@@ -14,7 +14,6 @@ app = FastAPI()
 
 # Создание и инициализация Telegram приложения
 telegram_app = Application.builder().token(BOT_TOKEN).build()
-asyncio.run(telegram_app.initialize())
 
 # Обработчик команды /start
 async def handle_start_command(update: Update, context):
@@ -32,3 +31,8 @@ async def telegram_webhook(request: Request):
     update = Update.de_json(data, telegram_app.bot)
     await telegram_app.process_update(update)
     return {"status": "ok"}
+
+# Инициализация Telegram-приложения при запуске FastAPI
+@app.on_event("startup")
+async def startup_event():
+    await telegram_app.initialize()
