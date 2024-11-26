@@ -27,12 +27,11 @@ telegram_app.add_handler(CommandHandler("start", handle_start_command))
 # Обработчик вебхуков
 @app.post("/webhook")
 async def telegram_webhook(request: Request):
+    # Инициализация Telegram-приложения при каждом запросе
+    if not telegram_app._is_initialized:
+        await telegram_app.initialize()
+
     data = await request.json()
     update = Update.de_json(data, telegram_app.bot)
     await telegram_app.process_update(update)
     return {"status": "ok"}
-
-# Инициализация Telegram-приложения при запуске FastAPI
-@app.on_event("startup")
-async def startup_event():
-    await telegram_app.initialize()
