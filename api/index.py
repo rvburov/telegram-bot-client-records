@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+from telegram import Bot, Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo, BotCommand
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 import os
 from dotenv import load_dotenv
@@ -14,7 +14,16 @@ app = FastAPI()
 
 # Создание и инициализация Telegram приложения
 telegram_app = Application.builder().token(BOT_TOKEN).build()
+bot = Bot(token=BOT_TOKEN)  # Инициализация бота для установки команд
 asyncio.run(telegram_app.initialize())
+
+# Устанавливаем команды для меню
+async def set_bot_commands():
+    commands = [
+        BotCommand("start", "Запустить бота"),
+        BotCommand("contact", "Контакты")
+    ]
+    await bot.set_my_commands(commands)
 
 # Отправляем сообщение с фото, текстом и кнопками
 async def handle_start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
