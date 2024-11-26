@@ -25,14 +25,15 @@ async def handle_start_command(update: Update, context: ContextTypes.DEFAULT_TYP
             [InlineKeyboardButton("Проложить маршрут к нам", url="https://yandex.ru/navi/org/buldog_barbershop/228670617679?si=53tdhmrm859cg5xgwpeu0hng6r")],
             [InlineKeyboardButton("⭐️ Оставить отзыв ⭐️", web_app=WebAppInfo(url="https://yandex.ru/maps/org/barberman/221541041982/reviews/?ll=30.320363%2C59.886241&mode=search&sll=30.320363%2C59.886239&tab=reviews&text=%22Россия%2C%20Санкт-Петербург%2C%20Московский%20проспект%2C%20140%2C%20Barberman%22&z=14"))],
             [InlineKeyboardButton("Instagram", web_app=WebAppInfo(url="https://instagram.com/your_instagram"))],
-            [InlineKeyboardButton("VK", web_app=WebAppInfo(url="https://m.vk.com/barbermanspb"))]
+            [InlineKeyboardButton("VK", web_app=WebAppInfo(url="https://m.vk.com/barbermanspb"))],
+            [InlineKeyboardButton("Написать сообщение", url="https://t.me/BARBERMANSPB")]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
         # Отправляем изображение
         await update.message.reply_photo(
             photo="https://avatars.mds.yandex.net/get-altay/5476806/2a0000017e6a21f86297a5246460c10df452/XXXL",
-            caption="⬇️ Выберите действие ⬇️",
+            caption="⬇️ Привет! Выберите действие ⬇️",
             reply_markup=reply_markup
         )
 
@@ -62,14 +63,15 @@ async def handle_back_to_menu(update: Update, context: ContextTypes.DEFAULT_TYPE
         [InlineKeyboardButton("Проложить маршрут к нам", url="https://yandex.ru/navi/org/buldog_barbershop/228670617679?si=53tdhmrm859cg5xgwpeu0hng6r")],
         [InlineKeyboardButton("⭐️ Оставить отзыв ⭐️", web_app=WebAppInfo(url="https://yandex.ru/maps/org/barberman/221541041982/reviews/?ll=30.320363%2C59.886241&mode=search&sll=30.320363%2C59.886239&tab=reviews&text=%22Россия%2C%20Санкт-Петербург%2C%20Московский%20проспект%2C%20140%2C%20Barberman%22&z=14"))],
         [InlineKeyboardButton("Instagram", web_app=WebAppInfo(url="https://instagram.com/your_instagram"))],
-        [InlineKeyboardButton("VK", web_app=WebAppInfo(url="https://m.vk.com/barbermanspb"))]
+        [InlineKeyboardButton("VK", web_app=WebAppInfo(url="https://m.vk.com/barbermanspb"))],
+        [InlineKeyboardButton("Написать сообщение", url="https://t.me/BARBERMANSPB")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     # Используем callback_query.message для отправки фото
     await update.callback_query.message.reply_photo(
         photo="https://avatars.mds.yandex.net/get-altay/5476806/2a0000017e6a21f86297a5246460c10df452/XXXL",
-        caption="⬇️ Выберите действие ⬇️",
+        caption="⬇️ Привет! Выберите действие ⬇️",
         reply_markup=reply_markup
     )
 
